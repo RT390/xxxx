@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دخول - بوت الفتاوى</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <div class="logo">🎙️</div>
+    <h1>بوت الفتاوى الصوتية</h1>
+    <p class="sub">الشيخ ابن عثيمين رحمه الله</p>
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% for cat, m in msgs %}
+        <div class="alert {{ cat }}">{{ m }}</div>
+      {% endfor %}
+    {% endwith %}
+    <form method="post">
+      <input type="password" name="password" placeholder="كلمة السر" required autofocus>
+      <button type="submit">دخول →</button>
+    </form>
+  </div>
+</body>
+</html>

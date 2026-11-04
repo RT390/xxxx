@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>القنوات</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo-nav">🎙️ بوت الفتاوى</div>
+    <div class="nav-links">
+      <a href="/">الرئيسية</a>
+      <a href="/channels" class="active">القنوات</a>
+      <a href="/logs">السجل</a>
+      <a href="/logout" class="logout">خروج</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="page-title">إدارة القنوات</h1>
+
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% for cat, m in msgs %}
+        <div class="alert {{ cat }}">{{ m }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <div class="form-card">
+      <h3>إضافة قناة</h3>
+      <form method="post" action="/channels/add" class="inline-form">
+        <input type="text" name="chat_id" placeholder="@username أو -1001234567890" required>
+        <input type="text" name="title" placeholder="اسم القناة (اختياري)">
+        <button class="btn green" type="submit">➕ إضافة</button>
+      </form>
+      <p class="hint">⚠️ تأكد أن البوت <b>أدمن</b> في القناة قبل الإضافة</p>
+    </div>
+
+    <h2 class="section-title">القنوات المضافة ({{ channels|length }})</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>chat_id</th><th>الاسم</th><th>التاريخ</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for c in channels %}
+          <tr>
+            <td>{{ c.id }}</td>
+            <td><code>{{ c.chat_id }}</code></td>
+            <td>{{ c.title or '-' }}</td>
+            <td>{{ c.added_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+              <form method="post" action="/channels/remove/{{ c.id }}" style="display:inline">
+                <button class="btn small red" type="submit">حذف</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" style="text-align:center;padding:40px;color:#888">لا توجد قنوات</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

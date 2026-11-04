@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: fatwa-bot
+    runtime: docker
+    plan: free
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_ID
+        value: "7989584978"
+      - key: DASHBOARD_PASSWORD
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: fatwa-db
+          property: connectionString
+      - key: BACKGROUND_IMAGE_URL
+        value: "https://i.imgur.com/8Q4YWvX.jpg"
+      - key: VIDEO_WIDTH
+        value: "1280"
+      - key: VIDEO_HEIGHT
+        value: "720"
+      - key: SEND_DELAY
+        value: "3"
+
+databases:
+  - name: fatwa-db
+    plan: free
+    databaseName: fatwa
+    user: fatwa_user

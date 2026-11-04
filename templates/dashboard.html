@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة التحكم</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo-nav">🎙️ بوت الفتاوى</div>
+    <div class="nav-links">
+      <a href="/" class="active">الرئيسية</a>
+      <a href="/channels">القنوات</a>
+      <a href="/logs">السجل</a>
+      <a href="/logout" class="logout">خروج</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="page-title">لوحة التحكم</h1>
+
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-num">{{ stats.total }}</div>
+        <div class="stat-label">الإجمالي</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-num">{{ stats.sent }}</div>
+        <div class="stat-label">أُرسلت</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-num">{{ stats.pending }}</div>
+        <div class="stat-label">معلقة</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-num">{{ stats.failed }}</div>
+        <div class="stat-label">فشلت</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="state-box">
+        الحالة الآن: <span id="state" class="badge {{ state }}">{{ state }}</span>
+      </div>
+      <div class="btns">
+        <button class="btn green" onclick="act('start')">▶️ ابدأ</button>
+        <button class="btn orange" onclick="act('pause')">⏸️ إيقاف مؤقت</button>
+        <button class="btn red" onclick="act('stop')">⏹️ إيقاف نهائي</button>
+        <button class="btn blue" onclick="loadData()">📥 تحميل الفتاوى من JSON</button>
+      </div>
+    </div>
+
+    <div class="progress-box">
+      <div class="progress-label">
+        <span>التقدم</span>
+        <span id="progress-text">0%</span>
+      </div>
+      <div class="progress-bar"><div id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">آخر الفتاوى</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>العنوان</th><th>الحالة</th><th>التاريخ</th></tr>
+        </thead>
+        <tbody>
+          {% for f in recent %}
+          <tr>
+            <td>{{ f.id }}</td>
+            <td class="title-cell">{{ f.title[:70] }}{% if f.title|length > 70 %}...{% endif %}</td>
+            <td><span class="badge {{ f.status }}">{{ f.status }}</span></td>
+            <td>{{ f.sent_at.strftime('%Y-%m-%d %H:%M') if f.sent_at else '-' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
